@@ -1,0 +1,46 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "dev:fresh": "node scripts/dev-fresh.mjs",
+    "dev:webpack": "next dev --port 3000",
+    "dev:4567": "next dev --port 4567 --turbopack",
+    "dev:turbo": "next dev --port 3000 --turbopack",
+    "dev:clean": "node scripts/clean-next-cache.mjs && next dev --port 3000",
+    "build-index": "node ../scripts/build-index.js",
+    "relabel-rules": "node ../scripts/relabel-rules.mjs",
+    "relabel-vision": "node ../scripts/relabel-vision.mjs",
+    "catalog-server": "node ../src/server.js",
+    "build": "next build",
+    "build:clean": "node scripts/clean-next-cache.mjs && next build",
+    "start": "next start --port 3000",
+    "verify": "npm run lint && npm run build",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@huggingface/transformers": "^4.1.0",
+    "@supabase/ssr": "^0.10.0",
+    "@supabase/supabase-js": "^2.101.1",
+    "next": "15.5.14",
+    "openai": "^6.33.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "^0.34.5",
+    "stream-json": "^2.1.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.14",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

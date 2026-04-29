@@ -1,0 +1,21 @@
+# Hugging Face / Transformers.js local model cache (can be large)
+.hf-cache/
+
+# Cursor / local agent state
+.cursor/
+agent-transcripts/
+
+# gstack local state
+.gstack/
+
+# Claude skills vendored metadata (generated)
+.claude/skills/
+
+# Local env files (should never be public)
+.env
+.env.*
+!.env.example
+
+# OS / tooling
+Thumbs.db
+desktop.ini

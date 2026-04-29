@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smouk — From zero to running (visual guide)</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #fff;
+      --border: #e4e4e7;
+      --text: #18181b;
+      --muted: #71717a;
+      --accent: #18181b;
+      --arrow: #a1a1aa;
+      --ok: #15803d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    .flow {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin: 2rem 0;
+    }
+    .flow-step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      position: relative;
+    }
+    .flow-step strong {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .flow-step h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      font-weight: 650;
+    }
+    .flow-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .arrow {
+      text-align: center;
+      color: var(--arrow);
+      font-size: 1.25rem;
+      padding: 0.25rem 0;
+      user-select: none;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+    .legend .on-pc::before { background: #2563eb; }
+    .legend .on-web::before { background: #c026d3; }
+    details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.65rem;
+      overflow: hidden;
+    }
+    summary {
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    details[open] summary {
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-body {
+      padding: 1rem 1rem 1.1rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .detail-body ol, .detail-body ul {
+      margin: 0.5rem 0 0 1.1rem;
+      padding: 0;
+    }
+    .detail-body li { margin: 0.35rem 0; }
+    code, .path {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.84em;
+      background: #f4f4f5;
+      padding: 0.12em 0.35em;
+      border-radius: 4px;
+    }
+    .path { display: inline-block; word-break: break-all; }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+    }
+    .tag-pc { background: #dbeafe; color: #1d4ed8; }
+    .tag-web { background: #fae8ff; color: #a21caf; }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Smouk — from scratch to “it runs”</h1>
+    <p class="sub">
+      One flow: what you do <strong>on your PC</strong> vs <strong>in the browser (Supabase)</strong>. Open this page anytime while you work.
+    </p>
+
+    <div class="legend">
+      <span class="on-pc"><strong style="color:#1d4ed8">Blue</strong> = on your computer (Cursor, File Explorer, Terminal)</span>
+      <span class="on-web"><strong style="color:#a21caf">Purple</strong> = in Supabase (or OpenAI) in the browser</span>
+    </div>
+
+    <section class="flow" aria-label="Step flow">
+      <div class="flow-step">
+        <strong>Step 0</strong>
+        <h2>Prerequisites <span class="tag tag-pc">PC</span></h2>
+        <p>Install <strong>Node.js</strong> (LTS) from nodejs.org. Restart the terminal after install. You need this for <code>npm</code>.</p>
+      </div>
+      <div class="arrow" aria-hidden="true">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 1</strong>
+        <h2>Your project folder <span class="tag tag-pc">PC</span></h2>
+        <p>Your code lives in a folder (e.g. <span class="path">DSAIL-project/web</span>). That folder has <code>package.json</code> — that means “this is the app.”</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 2</strong>
+        <h2>Supabase project (the cloud database + login) <span class="tag tag-web">Browser</span></h2>
+        <p>Create a free project at supabase.com. This is <strong>not</strong> a folder on your PC — it’s your backend online.</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 3</strong>
+        <h2>Copy the two Supabase strings <span class="tag tag-web">Browser</span></h2>
+        <p>Supabase → Project Settings → API → copy <strong>Project URL</strong> and <strong>Legacy anon</strong> key (<code>eyJ…</code>).</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 4</strong>
+        <h2>Create <code>.env.local</code> <span class="tag tag-pc">PC</span></h2>
+        <p>Inside <span class="path">web/</span>, create a file named <code>.env.local</code>. Paste URL + anon key + OpenAI key (see below).</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 5</strong>
+        <h2>OpenAI API key <span class="tag tag-web">Browser</span></h2>
+        <p>platform.openai.com → API keys → create key → paste into <code>.env.local</code> as <code>OPENAI_API_KEY</code>.</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 6</strong>
+        <h2>Run the SQL (tables + sample products) <span class="tag tag-web">Browser</span></h2>
+        <p>Supabase → SQL Editor → paste contents of <span class="path">web/supabase/schema.sql</span> from your PC → Run.</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 7</strong>
+        <h2>Turn on Email login <span class="tag tag-web">Browser</span></h2>
+        <p>Authentication → Providers → Email. For dev, you can disable “confirm email” so login is instant.</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 8</strong>
+        <h2>Install &amp; run the app <span class="tag tag-pc">PC</span></h2>
+        <p>In Terminal: <code>cd</code> to <span class="path">web</span>, then <code>npm install</code>, then <code>npm run dev</code>. Open <strong>http://localhost:3000</strong>.</p>
+      </div>
+      <div class="arrow">↓</div>
+
+      <div class="flow-step">
+        <strong>Step 9</strong>
+        <h2>Use the product <span class="tag tag-pc">PC</span></h2>
+        <p>Sign up → Style passport → Shop chat. The chat talks to OpenAI + searches your real <code>products</code> table in Supabase.</p>
+      </div>
+    </section>
+
+    <h2 style="font-size:1.1rem;margin:2rem 0 0.75rem;">Detailed clicks (expand)</h2>
+
+    <details>
+      <summary>What is <code>.env.local</code>?</summary>
+      <div class="detail-body">
+        A small text file in <span class="path">web/.env.local</span> that only your computer reads. It holds the Supabase URL, anon key, and OpenAI key so the app knows <strong>which</strong> backend to use. Never paste these keys in chat or public GitHub.
+      </div>
+    </details>
+
+    <details>
+      <summary>Example <code>.env.local</code> (fill in your values)</summary>
+      <div class="detail-body">
+        <pre style="margin:0;white-space:pre-wrap;background:#f4f4f5;padding:0.75rem;border-radius:8px;font-size:0.85rem;">NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+OPENAI_API_KEY=sk-...</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary>Why two “worlds” (PC vs Supabase)?</summary>
+      <div class="detail-body">
+        <ul>
+          <li><strong>Your PC</strong> = the website code (Next.js) you run with <code>npm run dev</code>.</li>
+          <li><strong>Supabase (browser)</strong> = where accounts and product rows live permanently.</li>
+          <li>The <strong>keys</strong> connect them — like an address + a badge to enter your vault.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>If you started from a completely new empty folder</summary>
+      <div class="detail-body">
+        You’d run <code>npx create-next-app@latest .</code> with TypeScript, then add Supabase packages and pages — we already did that for you in <span class="path">web/</span>. You only need to configure env + SQL + run.
+      </div>
+    </details>
+
+    <footer>
+      <p style="margin:0 0 0.5rem;"><strong>How to open this page</strong></p>
+      <p style="margin:0;">With the dev server running: <a href="/smouk-setup-guide.html">http://localhost:3000/smouk-setup-guide.html</a></p>
+      <p style="margin:0.5rem 0 0;">Or open the file directly: <span class="path">web/public/smouk-setup-guide.html</span></p>
+    </footer>
+  </div>
+</body>
+</html>

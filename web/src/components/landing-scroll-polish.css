@@ -1,0 +1,629 @@
+/* Scroll-driven landing polish — scoped under .lscp-root */
+.lscp-root * {
+  box-sizing: border-box;
+}
+
+.lscp-viewport {
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Let the global `.sku-mesh-backdrop` show through (platform orange / violet / blue). */
+  background: transparent;
+  border-radius: 0;
+}
+
+.lscp-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+.lscp-viewport::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+.lscp-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.lscp-sc {
+  /* Taller track so the highlight hold band is a longer physical scroll. */
+  height: 5400px;
+  position: relative;
+}
+
+.lscp-stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.lscp-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Light tint on top of the app mesh so the card field still reads; base is translucent. */
+  background:
+    radial-gradient(ellipse 55% 65% at 0% 100%, rgba(90, 26, 138, 0.42) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 55% at 100% 95%, rgba(255, 77, 0, 0.32) 0%, transparent 52%),
+    radial-gradient(ellipse 40% 35% at 8% 0%, rgba(0, 71, 255, 0.22) 0%, transparent 50%),
+    rgba(11, 0, 20, 0.22);
+}
+
+.lscp-fw {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.lscp-field {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Center the grid in the stage before/without JS; inline transform from
+     applyFieldTransform() then overrides with scale + parallax. */
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 1;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: filter 1s ease;
+}
+
+.lscp-srow {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.lscp-sk {
+  flex-shrink: 0;
+  width: 138px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  transition:
+    box-shadow 0.7s ease,
+    transform 0.6s ease,
+    opacity 0.9s ease;
+}
+
+.lscp-sk-ph {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lscp-sk-iw {
+  width: 100%;
+  height: 100%;
+  filter: blur(6px);
+  transform: scale(1.2);
+  transition:
+    filter 1s ease,
+    transform 1s ease;
+  position: relative;
+}
+
+.lscp-sk-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #fafaf8 0%, #eeebe5 75%, #c8c0b0 100%);
+}
+
+.lscp-sk-model {
+  position: absolute;
+  inset: 0;
+}
+
+.lscp-sk-head {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22%;
+  aspect-ratio: 0.85;
+  border-radius: 50% 50% 48% 48%;
+}
+
+.lscp-sk-hair {
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  aspect-ratio: 0.95;
+  border-radius: 48% 48% 35% 35%;
+}
+
+.lscp-sk-neck {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9%;
+  height: 6%;
+}
+
+.lscp-sk-dress {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lscp-sk-legs {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20%;
+  height: 25%;
+}
+
+.lscp-sk-arms {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 40%;
+  pointer-events: none;
+}
+
+.lscp-sk-arm-l,
+.lscp-sk-arm-r {
+  position: absolute;
+  width: 6%;
+  height: 60%;
+  top: 5%;
+}
+
+.lscp-sk-arm-l {
+  left: 12%;
+}
+.lscp-sk-arm-r {
+  right: 12%;
+}
+
+.lscp-sk-grad {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 46px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  z-index: 3;
+  pointer-events: none;
+}
+
+.lscp-sk-bts {
+  position: absolute;
+  bottom: 8px;
+  left: 6px;
+  display: flex;
+  gap: 4px;
+  z-index: 4;
+}
+
+.lscp-sk-saved {
+  background: rgba(15, 15, 25, 0.85);
+  color: #fff;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.lscp-sk-shop {
+  background: #fff;
+  color: #0d0d1a;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.lscp-sk-inf {
+  padding: 6px 8px 7px;
+  background: rgba(7, 7, 26, 0.92);
+  position: relative;
+  z-index: 5;
+  transition: opacity 0.8s ease;
+}
+
+.lscp-sk-b {
+  font-size: 6.5px;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 1.5px;
+}
+
+.lscp-sk-n {
+  font-size: 7.5px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lscp-sk-p {
+  font-size: 8px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.lscp-sk-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(7, 7, 26, 0.15);
+  pointer-events: none;
+  transition:
+    background 0.9s ease,
+    opacity 0.9s ease;
+}
+
+.lscp-field.lscp-field--dim .lscp-sk:not(.lscp-sk--gem) {
+  opacity: 0.35;
+}
+
+.lscp-field.lscp-field--dim .lscp-sk:not(.lscp-sk--gem) .lscp-sk-tint {
+  background: rgba(7, 7, 26, 0.55);
+}
+
+.lscp-field.lscp-field--dim .lscp-sk:not(.lscp-sk--gem) .lscp-sk-inf {
+  opacity: 0.6;
+}
+
+/* “Result” cards: same blurred art as everyone else — strong purple wash + ring + glow */
+.lscp-sk--gem {
+  opacity: 1 !important;
+  z-index: 10;
+  overflow: visible;
+  box-shadow:
+    0 0 0 3px #e9d5ff,
+    0 0 0 6px rgba(168, 85, 247, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+    0 12px 40px rgba(124, 58, 237, 0.45),
+    0 0 48px rgba(192, 132, 252, 0.4);
+}
+
+.lscp-sk--gem .lscp-sk-tint {
+  background: rgba(88, 28, 135, 0.28);
+}
+
+.lscp-sk--gem::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    165deg,
+    rgba(216, 180, 254, 0.42) 0%,
+    rgba(91, 33, 182, 0.52) 48%,
+    rgba(192, 132, 252, 0.38) 100%
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(233, 213, 255, 0.95),
+    inset 0 0 24px rgba(124, 58, 237, 0.35);
+}
+
+.lscp-sk--gem .lscp-sk-inf {
+  position: relative;
+  z-index: 3;
+}
+
+.lscp-sk--gem .lscp-sk-bts {
+  z-index: 4;
+}
+
+.lscp-vg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 95% 85% at 50% 50%,
+    transparent 55%,
+    rgba(11, 0, 20, 0.12) 88%,
+    rgba(11, 0, 20, 0.28) 100%
+  );
+  transition: background 1s ease;
+}
+
+.lscp-vg.lscp-vg--final {
+  background: radial-gradient(
+    ellipse 75% 65% at 50% 50%,
+    rgba(11, 0, 20, 0.38) 0%,
+    rgba(11, 0, 20, 0.52) 40%,
+    rgba(11, 0, 20, 0.68) 100%
+  );
+}
+
+.lscp-pg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #fff, #a855f7);
+  z-index: 7;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* Scroll-story chat demo (before final SKU lockup) */
+.lscp-chat-demo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  width: min(440px, calc(100% - 1.75rem));
+  max-height: min(40dvh, 360px);
+  overflow: hidden;
+  transform: translate(-50%, -54%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.lscp-chat-demo.lscp-chat--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lscp-chat-demo.lscp-chat--gone {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.lscp-chat-demo__inner {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 10, 28, 0.82);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(168, 85, 247, 0.15);
+  padding: 14px 14px 12px;
+  text-align: left;
+}
+
+.lscp-chat-demo__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lscp-chat-demo__title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.lscp-chat-demo__badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(196, 181, 253, 0.95);
+  background: rgba(168, 85, 247, 0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.lscp-chat-line {
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+
+.lscp-chat-line--on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lscp-chat-demo__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
+}
+
+.lscp-chat-demo__bubble {
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin: 0;
+}
+
+.lscp-chat-demo__bubble--user {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 3.2em;
+}
+
+.lscp-chat-cursor {
+  display: inline-block;
+  margin-left: 1px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 300;
+  animation: lscp-cursor-blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes lscp-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.lscp-hud {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+  width: 100%;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+
+/* Let scroll/wheel pass through until the lockup is actually shown. */
+.lscp-hud-inner {
+  pointer-events: none;
+}
+
+.lscp-lb {
+  opacity: 0;
+  transform: translateY(20px) scale(0.92);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s ease,
+    visibility 0s linear 1.2s;
+  text-align: center;
+}
+
+.lscp-lb.lscp-lb--on {
+  opacity: 1 !important;
+  transform: translate(0, 0) scale(1);
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s ease,
+    visibility 0s linear 0s;
+}
+
+.lscp-tl {
+  font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  transition: opacity 1s ease;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.375;
+  text-shadow:
+    0 0 30px rgba(0, 0, 0, 0.95),
+    0 0 60px rgba(0, 0, 0, 0.8);
+  margin-top: 0.75rem;
+}
+
+.lscp-tl.lscp-tl--on {
+  opacity: 1 !important;
+}
+
+.lscp-hud-cta {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 0.8s ease 0.1s,
+    visibility 0s linear 0.95s;
+}
+
+.lscp-hud-cta.lscp-hud-cta--on {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 0.8s ease 0.1s,
+    visibility 0s linear 0s;
+}
+
+.lscp-hint {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  animation: lscp-bob 1.8s ease-in-out infinite;
+  transition: opacity 0.4s ease;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes lscp-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(6px);
+  }
+}
+
+.lscp-hint.lscp-hint--hide {
+  opacity: 0;
+}
+
+.lscp-hint-arrow {
+  width: 14px;
+  height: 8px;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.85);
+  transform: rotate(45deg);
+  margin-top: -4px;
+}
