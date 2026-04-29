@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   formatPhoneForStore,
   parseStoredPhone,
@@ -196,6 +197,15 @@ export function ProfileTabs({
                 embedded
                 onLocationSavingStateChange={setLocSaving}
               />
+            </div>
+
+            <div className="pt-2">
+              <Link
+                href="/settings/password"
+                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold tracking-wide text-white/85 transition hover:border-white/20 hover:bg-white/10"
+              >
+                Change password
+              </Link>
             </div>
           </div>
         ) : null}
